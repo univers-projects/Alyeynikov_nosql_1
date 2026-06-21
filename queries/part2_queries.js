@@ -1,5 +1,27 @@
 const database = db.getSiblingDB("spotify");
 
+print("\nTask 1. Party tracks");
+printjson(
+  database.tracks.find(
+    {
+      "audio_features.danceability": { $gt: 0.7 },
+      "audio_features.energy": { $gt: 0.7 },
+      duration_ms: { $gte: 180000, $lte: 300000 }
+    },
+    {
+      _id: 0,
+      track_name: 1,
+      artists: 1,
+      track_genre: 1,
+      popularity: 1,
+      duration_ms: 1,
+      duration_sec: 1,
+      "audio_features.danceability": 1,
+      "audio_features.energy": 1
+    }
+  ).sort({ popularity: -1, track_name: 1 }).limit(50).toArray()
+);
+
 print("\nTask 2. Popular artists whose all tracks are popular");
 printjson(
   database.tracks.aggregate([

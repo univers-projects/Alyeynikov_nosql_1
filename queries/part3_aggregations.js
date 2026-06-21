@@ -66,9 +66,24 @@ printjson(
         }
       }
     },
-    { $group: { _id: "$mood", track_count: { $sum: 1 } } },
-    { $project: { _id: 0, mood: "$_id", track_count: 1 } },
-    { $sort: { track_count: -1, mood: 1 } }
+    {
+      $group: {
+        _id: {
+          genre: "$track_genre",
+          mood: "$mood"
+        },
+        track_count: { $sum: 1 }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        genre: "$_id.genre",
+        mood: "$_id.mood",
+        track_count: 1
+      }
+    },
+    { $sort: { genre: 1, mood: 1 } }
   ]).toArray()
 );
 
